@@ -14,7 +14,7 @@ var http = require('http');
 //mongoose makes it easier to communicate with mongodb
 var mongoose = require('mongoose');
 
-//artist class
+//config class
 var connectdb = require('./config/db.js');
 var routes = require('./app/routes.js');
 

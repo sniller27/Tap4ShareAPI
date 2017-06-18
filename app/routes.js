@@ -1,55 +1,55 @@
 var path = require('path');
 var sanitizer = require('sanitizer');
 
-var Artist = require('./Artist');
+var ImageSchema = require('./ImageSchema');
 
 var clients = {};
 
 module.exports = function (app) {
 
-  //READ ALL ARTISTS (GET)
-  app.get('/api/artists', function(req, res){
+  //READ ALL IMAGES (GET)
+  app.get('/api/images', function(req, res){
     console.log("first HERE GET");
   var nameparameter = req.query.name;
   var nameparametersanitized = sanitizer.escape(nameparameter);
-    Artist.find({'name' : new RegExp(nameparametersanitized, 'i')}, function(err, users) {
+    ImageSchema.find({'name' : new RegExp(nameparametersanitized, 'i')}, function(err, users) {
       if (err) throw err;
 
       res.json(users);
     });
   });
 
-  //READ SPECIFIC ARTISTS (GET)
-  app.get('/api/artist', function(req, res){
+  //READ SPECIFIC IMAGE (GET)
+  app.get('/api/image', function(req, res){
     console.log("first HERE GET");
   var nameparameter = req.query.name;
   // console.log(nameparameter);
   var nameparametersanitized = sanitizer.escape(nameparameter);
-    Artist.find({'name' : new RegExp(nameparametersanitized, 'i')}, function(err, users) {
+    ImageSchema.find({'name' : new RegExp(nameparametersanitized, 'i')}, function(err, users) {
       if (err) throw err;
 
       res.json(users);
     });
   });
 
-  //INSERT NEW ARTIST (POST)
-  app.post('/api/artist', function(req, res){
+  //INSERT NEW IMAGE (POST)
+  app.post('/api/image', function(req, res){
 console.log("first HERE POST");
     res.send(req.body);
 
     //sanitizing
-    var sanitizename = sanitizer.escape(req.body.name);
-    var sanitizebplace = sanitizer.escape(req.body.birthPlace);
+    var sanitizename = sanitizer.escape(req.body.timestamp);
+    var sanitizebplace = sanitizer.escape(req.body.source);
 
-    var newArtist = new Artist({
-      name: sanitizename,
-      birthPlace: sanitizebplace,
-      birthDate: req.body.birthDate,
-      favoritebool: req.body.favoritebool
+    var newImageSchema = new ImageSchema({
+      timestamp: sanitizename,
+      source: sanitizebplace,
+      title: req.body.title,
+      description: req.body.description
     });
 
     //Mongoose Save Function to save data
-    newArtist.save(function(error, product, numAffected) {
+    newImageSchema.save(function(error, product, numAffected) {
       
       if (error) {
         console.error(error);
@@ -65,13 +65,13 @@ console.log("first HERE POST");
 
   });
 
-  //UPDATE ARTIST (PUT)
-  app.put('/api/artist', function(req, res){
+  //UPDATE IMAGE (PUT)
+  app.put('/api/image', function(req, res){
 
     res.send(req.body);
-    var artistid = req.body.selectedid;
+    var imageid = req.body.selectedid;
 
-    Artist.update({'id': artistid}, {
+    ImageSchema.update({'id': imageid}, {
         favoritebool: req.body.afavorite
     }, function(err, numberAffected, rawResponse) {
        //handle it
@@ -83,14 +83,14 @@ console.log("first HERE POST");
 
   });
 
-  //DELETE ARTIST
-  app.delete('/api/artist', function(req, res){
+  //DELETE IMAGE
+  app.delete('/api/image', function(req, res){
 
     res.send(req.body);
     var delid = req.body.selectedid;
 
      //Mongoose Save Funtktion to save data
-    Artist.findOneAndRemove({id : delid}, function(error) {
+    ImageSchema.findOneAndRemove({id : delid}, function(error) {
       if (error) {
         console.error(error);
       }

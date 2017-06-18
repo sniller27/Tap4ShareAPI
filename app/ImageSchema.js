@@ -5,12 +5,12 @@ var AutoIncrement = require('mongoose-sequence');
 
 
 //making new mongoose schema
-var ArtistSchema = new mongoose.Schema({
+var ImageSchema = new mongoose.Schema({
 	id: Number,
-    name: String,
-    birthPlace: String,
-    birthDate: String,
-    favoritebool: String
+    timestamp: String,
+    source: String,
+    title: String,
+    description: String
 });
 
 //for auto increment
@@ -33,7 +33,7 @@ var entitySchema = mongoose.Schema({
 //         next();
 //     });
 // });
-ArtistSchema.plugin(AutoIncrement, {inc_field: 'id'});
+ImageSchema.plugin(AutoIncrement, {inc_field: 'id'});
 
 //use the schema for a mongoose model and export it
-module.exports = mongoose.model('Artist', ArtistSchema);
+module.exports = mongoose.model('ImageSchema', ImageSchema);
