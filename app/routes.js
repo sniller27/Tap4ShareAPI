@@ -3,7 +3,6 @@ var sanitizer = require('sanitizer');
 
 var Artist = require('./Artist');
 
-var count = 0;
 var clients = {};
 
 module.exports = function (app) {
