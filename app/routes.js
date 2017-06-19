@@ -1,6 +1,10 @@
 var path = require('path');
 var sanitizer = require('sanitizer');
 
+//for image upload
+var formidable = require('formidable');
+var util = require('util');
+
 var ImageSchema = require('./ImageSchema');
 
 var clients = {};
@@ -84,6 +88,28 @@ console.log("first HERE POST");
         }
       }
 
+    });
+
+  });
+
+  //UPLOAD IMAGE
+  app.post('/api/uploadfile', function(req, res){
+console.log("upload method");
+    // var form = new formidable.IncomingForm();
+ 
+    // form.parse(req, function(err, fields, files) {
+    //   res.writeHead(200, {'content-type': 'text/plain'});
+    //   res.write('received upload:\n\n');
+    //   res.end(util.inspect({fields: fields, files: files}));
+    // });
+
+    var form = new formidable.IncomingForm();
+    form.uploadDir = "public/assets/temp/";
+ 
+    form.parse(req, function(err, fields, files) {
+      res.writeHead(200, {'content-type': 'text/plain'});
+      res.write('received upload:\n\n');
+      res.end(util.inspect({fields: fields, files: files}));
     });
 
   });
