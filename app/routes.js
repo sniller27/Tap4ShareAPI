@@ -12,7 +12,7 @@ module.exports = function (app) {
     console.log("first HERE GET");
   var nameparameter = req.query.name;
   var nameparametersanitized = sanitizer.escape(nameparameter);
-    ImageSchema.find({'name' : new RegExp(nameparametersanitized, 'i')}, function(err, users) {
+    ImageSchema.find({'title' : new RegExp(nameparametersanitized, 'i')}, function(err, users) {
       if (err) throw err;
 
       res.json(users);
@@ -25,12 +25,35 @@ module.exports = function (app) {
   var nameparameter = req.query.name;
   // console.log(nameparameter);
   var nameparametersanitized = sanitizer.escape(nameparameter);
-    ImageSchema.find({'name' : new RegExp(nameparametersanitized, 'i')}, function(err, users) {
+    ImageSchema.find({'title' : new RegExp(nameparametersanitized, 'i')}, function(err, users) {
       if (err) throw err;
 
       res.json(users);
     });
   });
+
+app.get('/api/imagefile', function(req,res){
+ var nameparameter = req.query.name;
+  // console.log(nameparameter);
+  var nameparametersanitized = sanitizer.escape(nameparameter);
+    // ImageSchema.find({'source' : new RegExp(nameparametersanitized, 'i')}, 'source', function(err, users) {
+    //   if (err) throw err;
+
+      res.sendFile(path.join(__dirname, '../public/assets/images/', nameparametersanitized));
+    //   console.log(users);
+    // });
+
+  //   ImageSchema.findOne({ 'source': nameparametersanitized }, 'source', function (err, person) {
+  //   if (err) return handleError(err);
+  //   console.log(users);
+  // })
+    
+    // if(req.user){
+    //     res.sendFile('/public/assets/images/cat.jpg');
+    // } else {
+    //     res.status(401).send('Authorization required!');
+    // }
+});
 
   //INSERT NEW IMAGE (POST)
   app.post('/api/image', function(req, res){

@@ -6,7 +6,6 @@ var AutoIncrement = require('mongoose-sequence');
 
 //making new mongoose schema
 var ImageSchema = new mongoose.Schema({
-	id: Number,
     timestamp: String,
     source: String,
     title: String,
@@ -33,7 +32,7 @@ var entitySchema = mongoose.Schema({
 //         next();
 //     });
 // });
-ImageSchema.plugin(AutoIncrement, {inc_field: 'id'});
+ImageSchema.plugin(AutoIncrement, {inc_field: 'imageid'});
 
 //use the schema for a mongoose model and export it
 module.exports = mongoose.model('ImageSchema', ImageSchema);
