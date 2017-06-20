@@ -5,6 +5,9 @@ var sanitizer = require('sanitizer');
 var formidable = require('formidable');
 var util = require('util');
 
+//for moving files (images from temp to images folder)
+var mv = require('mv');
+
 var ImageSchema = require('./ImageSchema');
 
 var clients = {};
@@ -61,16 +64,18 @@ app.get('/api/imagefile', function(req,res){
 
   //INSERT NEW IMAGE (POST)
   app.post('/api/image', function(req, res){
+    var imagesource = req.body.source;
 console.log("first HERE POST");
+console.log("THIS IS IMAGESTRNIG: " + imagesource);
     res.send(req.body);
 
     //sanitizing
     var sanitizename = sanitizer.escape(req.body.timestamp);
-    var sanitizebplace = sanitizer.escape(req.body.source);
+    // var sanitizebplace = sanitizer.escape(imagesource);
 
     var newImageSchema = new ImageSchema({
       timestamp: sanitizename,
-      source: sanitizebplace,
+      source: imagesource,
       title: req.body.title,
       description: req.body.description
     });
@@ -86,6 +91,11 @@ console.log("first HERE POST");
             // Send a message to the client with the message
             clients[i].sendUTF("datasend");
         }
+        mv(path.join(__dirname, '../public/assets/temp/', imagesource), path.join(__dirname, '../public/assets/images/', imagesource), function(err) {
+          // done. it tried fs.rename first, and then falls back to 
+          // piping the source file to the dest file and then unlinking 
+          // the source file. 
+        });
       }
 
     });
@@ -104,13 +114,21 @@ console.log("upload method");
     // });
 
     var form = new formidable.IncomingForm();
+    console.log(form);
     form.uploadDir = "public/assets/temp/";
  
     form.parse(req, function(err, fields, files) {
-      res.writeHead(200, {'content-type': 'text/plain'});
-      res.write('received upload:\n\n');
-      res.end(util.inspect({fields: fields, files: files}));
+      // res.writeHead(200, {'content-type': 'text/plain'});
+      // res.write('received upload:\n\n');
+      // res.end(util.inspect({fields: fields, files: files}));
+      
+      console.log("this is the file: " + files.file.path)
+
+      //returns image name to client
+      var filename = path.basename(files.file.path);
+      res.json(filename);
     });
+
 
   });
 
