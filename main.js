@@ -24,7 +24,7 @@ connectdb();
 /**
     USED MIDDLEWARE
 **/
-
+ 
 //static files
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
