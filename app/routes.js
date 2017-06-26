@@ -39,6 +39,34 @@ module.exports = function (app) {
     });
   });
 
+  //READ ONE RANDOM IMAGE (GET)
+  app.get('/api/randomimagedata', function(req, res){
+    console.log("GET random image");
+  // var nameparameter = req.query.name;
+  // // console.log(nameparameter);
+  // var nameparametersanitized = sanitizer.escape(nameparameter);
+  //   ImageSchema.find({'title' : new RegExp(nameparametersanitized, 'i')}, function(err, users) {
+  //     if (err) throw err;
+
+  //     res.json(users);
+  //   });
+  ImageSchema.count().exec(function (err, count) {
+
+    // Get a random entry
+    var random = Math.floor(Math.random() * count)
+
+    // Again query all users but only fetch one offset by our random #
+    ImageSchema.findOne().skip(random).exec(
+      function (err, result) {
+        // Tada! random user
+        console.log(result);
+        res.json(result);
+      })
+  })
+
+
+  });
+
 app.get('/api/imagefile', function(req,res){
  var nameparameter = req.query.name;
   // console.log(nameparameter);
