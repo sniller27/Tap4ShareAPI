@@ -9,7 +9,8 @@ var ImageSchema = new mongoose.Schema({
     timestamp: String,
     source: String,
     title: String,
-    description: String
+    description: String,
+    location: String
 });
 
 //for auto increment

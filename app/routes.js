@@ -105,7 +105,8 @@ console.log("THIS IS IMAGESTRNIG: " + imagesource);
       timestamp: sanitizename,
       source: imagesource,
       title: req.body.title,
-      description: req.body.description
+      description: req.body.description,
+      location: req.body.location
     });
 
     //Mongoose Save Function to save data
