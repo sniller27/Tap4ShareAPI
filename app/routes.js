@@ -26,6 +26,15 @@ module.exports = function (app) {
     });
   });
 
+  //READ SORTED NEWEST ADDED IMAGES BASED BY NUMBER (GET)
+  app.get('/api/newimages', function(req, res){
+    ImageSchema.find({}, function(err, users) {
+      if (err) throw err;
+
+      res.json(users);
+    }).sort({'timestamp': 'desc'}).limit(5);
+  });
+
   //READ SPECIFIC IMAGE (GET)
   app.get('/api/image', function(req, res){
     console.log("first HERE GET");
@@ -98,11 +107,12 @@ console.log("THIS IS IMAGESTRNIG: " + imagesource);
     res.send(req.body);
 
     //sanitizing
-    var sanitizename = sanitizer.escape(req.body.timestamp);
-    // var sanitizebplace = sanitizer.escape(imagesource);
+    var timestamp = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
 
+    // var sanitizebplace = sanitizer.escape(imagesource);
+console.log(timestamp);
     var newImageSchema = new ImageSchema({
-      timestamp: sanitizename,
+      timestamp: timestamp,
       source: imagesource,
       title: req.body.title,
       description: req.body.description,
