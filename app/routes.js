@@ -10,6 +10,9 @@ var mv = require('mv');
 
 var ImageSchema = require('./ImageSchema');
 
+//for timestamps
+var moment = require('moment-timezone');
+
 var clients = {};
 
 module.exports = function (app) {
@@ -106,8 +109,17 @@ console.log("first HERE POST");
 console.log("THIS IS IMAGESTRNIG: " + imagesource);
     res.send(req.body);
 
-    //sanitizing
-    var timestamp = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+    //normal formatted timestamp
+    // var timestamp = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+
+    //offset timestamp from Unix time
+    // var date = new Date();
+    // var ts = String(Math.round(date.getTime() / 1000) + date.getTimezoneOffset() * 60);
+
+    //moment.js timezome timestamp
+    var timestamp = moment().tz("Europe/Zurich").format('YYYY-MM-DD H:mm:ss');
+
+
 
     // var sanitizebplace = sanitizer.escape(imagesource);
 console.log(timestamp);

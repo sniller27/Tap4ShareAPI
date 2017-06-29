@@ -21,6 +21,8 @@
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "formidable": "^1.1.1",
+    "moment": "^2.18.1",
+    "moment-timezone": "^0.5.13",
     "mongodb": "^2.2.26",
     "mongoose": "^4.9.9",
     "mongoose-sequence": "^3.2.0",
