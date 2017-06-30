@@ -1,5 +1,0 @@
----
-applications:
- - name: artistapplication
-   random-route: true
-   memory: 256M
