@@ -35,7 +35,7 @@ module.exports = function (app) {
       if (err) throw err;
 
       res.json(users);
-    }).sort({'timestamp': 'desc'}).limit(5);
+    }).sort({_id: -1}).limit(5);
   });
 
   //READ SPECIFIC IMAGE (GET)

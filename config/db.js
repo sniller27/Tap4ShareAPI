@@ -4,9 +4,13 @@ module.exports = function () {
 
 	var env = process.env.NODE_ENV || 'dev';
 	console.log(env);
-	// var URLmongodb = 'mongodb://john:1234@ds131512.mlab.com:31512/tap4share';
+
+	if (env == 'dev') {
+		var URLmongodb = 'mongodb://john:1234@ds131512.mlab.com:31512/tap4share';
+	}else {
+		var URLmongodb = 'mongodb://localhost:27017/tap4share';
+	}
 	
-	var URLmongodb = 'mongodb://localhost:27017/tap4share';
 
 	//Mongoose Connection
 	mongoose.connect(URLmongodb); // connect to our mongoDB database (uncomment after you enter in your own credentials in config/db.js)
