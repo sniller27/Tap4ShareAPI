@@ -7,8 +7,10 @@ module.exports = function () {
 
 	if (env == 'dev') {
 		var URLmongodb = 'mongodb://john:1234@ds131512.mlab.com:31512/tap4share';
+		console.log("running as dev");
 	}else {
 		var URLmongodb = 'mongodb://localhost:27017/tap4share';
+		console.log("running as production");
 	}
 	
 	//Mongoose Connection
