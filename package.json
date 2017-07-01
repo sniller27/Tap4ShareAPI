@@ -1,5 +1,5 @@
 {
-  "name": "Tap4Share REST API",
+  "name": "tap4share",
   "version": "1.0.0",
   "description": "This is a REST API for the mobile application Tap4Share",
   "main": "main.js",
@@ -28,6 +28,6 @@
     "mongoose-sequence": "^3.2.0",
     "mv": "^2.1.1",
     "sanitizer": "^0.1.3",
-    "util": "^0.10.3",
+    "util": "^0.10.3"
   }
 }
