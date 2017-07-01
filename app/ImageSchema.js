@@ -6,6 +6,7 @@ var AutoIncrement = require('mongoose-sequence');
 
 //making new mongoose schema
 var ImageSchema = new mongoose.Schema({
+	imageid: Number,
     timestamp: String,
     source: String,
     title: String,

@@ -1,7 +1,6 @@
 /** 
     MODULES
 **/
-var WebSocketServer = require('websocket').server;
 //express for middleware(static files), POST/GET methods
 var express = require('express')
 var app = express()
@@ -16,6 +15,7 @@ var mongoose = require('mongoose');
 
 //config class
 var connectdb = require('./config/db.js');
+//routes and API endpoints
 var routes = require('./app/routes.js');
 
 //connect to mongodb
@@ -47,11 +47,6 @@ app.get('/', function(req, res){
 	res.sendFile(__dirname + '/index.html');
 });
  
-function originIsAllowed(origin) {
-  // put logic here to detect whether the specified origin is allowed. 
-  return true;
-}
-
-//routes
+//pass app to routes module
 routes(app);
 

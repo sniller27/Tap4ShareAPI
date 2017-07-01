@@ -11,7 +11,6 @@ module.exports = function () {
 		var URLmongodb = 'mongodb://localhost:27017/tap4share';
 	}
 	
-
 	//Mongoose Connection
 	mongoose.connect(URLmongodb); // connect to our mongoDB database (uncomment after you enter in your own credentials in config/db.js)
 

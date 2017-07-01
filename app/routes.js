@@ -13,210 +13,150 @@ var ImageSchema = require('./ImageSchema');
 //for timestamps
 var moment = require('moment-timezone');
 
-var clients = {};
-
 module.exports = function (app) {
 
   //READ ALL IMAGES (GET)
   app.get('/api/images', function(req, res){
-    console.log("first HERE GET");
+
   var nameparameter = req.query.name;
   var nameparametersanitized = sanitizer.escape(nameparameter);
-    ImageSchema.find({'title' : new RegExp(nameparametersanitized, 'i')}, function(err, users) {
-      if (err) throw err;
 
-      res.json(users);
-    });
-  });
-
-  //READ SORTED NEWEST ADDED IMAGES BASED BY NUMBER (GET)
-  app.get('/api/newimages', function(req, res){
     ImageSchema.find({}, function(err, users) {
       if (err) throw err;
 
       res.json(users);
-    }).sort({_id: -1}).limit(5);
+    });
+
   });
 
   //READ SPECIFIC IMAGE (GET)
-  app.get('/api/image', function(req, res){
-    console.log("first HERE GET");
-  var nameparameter = req.query.name;
-  // console.log(nameparameter);
-  var nameparametersanitized = sanitizer.escape(nameparameter);
-    ImageSchema.find({'title' : new RegExp(nameparametersanitized, 'i')}, function(err, users) {
+  app.get('/api/images/:id', function(req, res){
+
+  var imageid = req.params.id;
+  var imageidsanitized = sanitizer.escape(imageid);
+
+    ImageSchema.find({'imageid' : imageidsanitized}, function(err, users) {
       if (err) throw err;
 
       res.json(users);
     });
+
+  });
+
+  //READ SORTED NEWEST ADDED IMAGES BASED BY NUMBER (GET)
+  app.get('/api/newimages/:qty', function(req, res){
+
+    var qty = req.params.qty;
+    var qtysanitized = sanitizer.escape(qty);
+    qtysanitized = parseInt(qtysanitized)
+
+    ImageSchema.find({}, function(err, users) {
+      if (err) throw err;
+
+      res.json(users);
+    }).sort({_id: -1}).limit(qtysanitized);
+
   });
 
   //READ ONE RANDOM IMAGE (GET)
   app.get('/api/randomimagedata', function(req, res){
-    console.log("GET random image");
-  // var nameparameter = req.query.name;
-  // // console.log(nameparameter);
-  // var nameparametersanitized = sanitizer.escape(nameparameter);
-  //   ImageSchema.find({'title' : new RegExp(nameparametersanitized, 'i')}, function(err, users) {
-  //     if (err) throw err;
 
-  //     res.json(users);
-  //   });
-  ImageSchema.count().exec(function (err, count) {
+    ImageSchema.count().exec(function (err, count) {
+      // Get a random entry
+      var random = Math.floor(Math.random() * count)
 
-    // Get a random entry
-    var random = Math.floor(Math.random() * count)
-
-    // Again query all users but only fetch one offset by our random #
-    ImageSchema.findOne().skip(random).exec(
-      function (err, result) {
-        // Tada! random user
-        console.log(result);
-        res.json(result);
-      })
-  })
-
-
-  });
-
-app.get('/api/imagefile', function(req,res){
- var nameparameter = req.query.name;
-  // console.log(nameparameter);
-  var nameparametersanitized = sanitizer.escape(nameparameter);
-    // ImageSchema.find({'source' : new RegExp(nameparametersanitized, 'i')}, 'source', function(err, users) {
-    //   if (err) throw err;
-
-      res.sendFile(path.join(__dirname, '../public/assets/images/', nameparametersanitized));
-    //   console.log(users);
-    // });
-
-  //   ImageSchema.findOne({ 'source': nameparametersanitized }, 'source', function (err, person) {
-  //   if (err) return handleError(err);
-  //   console.log(users);
-  // })
-    
-    // if(req.user){
-    //     res.sendFile('/public/assets/images/cat.jpg');
-    // } else {
-    //     res.status(401).send('Authorization required!');
-    // }
-});
-
-  //INSERT NEW IMAGE (POST)
-  app.post('/api/image', function(req, res){
-    var imagesource = req.body.source;
-console.log("first HERE POST");
-console.log("THIS IS IMAGESTRNIG: " + imagesource);
-    res.send(req.body);
-
-    //normal formatted timestamp
-    // var timestamp = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-
-    //offset timestamp from Unix time
-    // var date = new Date();
-    // var ts = String(Math.round(date.getTime() / 1000) + date.getTimezoneOffset() * 60);
-
-    //moment.js timezome timestamp
-    var timestamp = moment().tz("Europe/Zurich").format('YYYY-MM-DD H:mm:ss');
-
-
-
-    // var sanitizebplace = sanitizer.escape(imagesource);
-console.log(timestamp);
-    var newImageSchema = new ImageSchema({
-      timestamp: timestamp,
-      source: imagesource,
-      title: req.body.title,
-      description: req.body.description,
-      location: req.body.location
-    });
-
-    //Mongoose Save Function to save data
-    newImageSchema.save(function(error, product, numAffected) {
-      
-      if (error) {
-        console.error(error);
-      }
-      if (numAffected == 1) {
-        for(var i in clients){
-            // Send a message to the client with the message
-            clients[i].sendUTF("datasend");
-        }
-        mv(path.join(__dirname, '../public/assets/temp/', imagesource), path.join(__dirname, '../public/assets/images/', imagesource), function(err) {
-          // done. it tried fs.rename first, and then falls back to 
-          // piping the source file to the dest file and then unlinking 
-          // the source file. 
-        });
-      }
-
-    });
-
-  });
-
-  //UPLOAD IMAGE
-  app.post('/api/uploadfile', function(req, res){
-console.log("upload method");
-    // var form = new formidable.IncomingForm();
- 
-    // form.parse(req, function(err, fields, files) {
-    //   res.writeHead(200, {'content-type': 'text/plain'});
-    //   res.write('received upload:\n\n');
-    //   res.end(util.inspect({fields: fields, files: files}));
-    // });
-
-    var form = new formidable.IncomingForm();
-    console.log(form);
-    form.uploadDir = "public/assets/temp/";
- 
-    form.parse(req, function(err, fields, files) {
-      // res.writeHead(200, {'content-type': 'text/plain'});
-      // res.write('received upload:\n\n');
-      // res.end(util.inspect({fields: fields, files: files}));
-      
-      console.log("this is the file: " + files.file.path)
-
-      //returns image name to client
-      var filename = path.basename(files.file.path);
-      res.json(filename);
-    });
-
-
-  });
-
-  //UPDATE IMAGE (PUT)
-  app.put('/api/image', function(req, res){
-
-    res.send(req.body);
-    var imageid = req.body.selectedid;
-
-    ImageSchema.update({'id': imageid}, {
-        favoritebool: req.body.afavorite
-    }, function(err, numberAffected, rawResponse) {
-       //handle it
-       for(var i in clients){
-           // Send a message to the client with the message
-           clients[i].sendUTF("datasend");
-       }
+      ImageSchema.findOne().skip(random).exec(
+        function (err, result) {
+          res.json(result);
+        })
     })
 
   });
 
-  //DELETE IMAGE
-  app.delete('/api/image', function(req, res){
+  app.get('/api/imagefile/:uploadname', function(req,res){
+    var nameparameter = req.params.uploadname;
+    var nameparametersanitized = sanitizer.escape(nameparameter);
+    res.sendFile(path.join(__dirname, '../public/assets/images/', nameparametersanitized));
+  });
 
-    res.send(req.body);
-    var delid = req.body.selectedid;
+  //INSERT NEW IMAGE (POST)
+  app.post('/api/image', function(req, res){
+    //moment.js timezome timestamp
+    var timestamp = moment().tz("Europe/Zurich").format('YYYY-MM-DD H:mm:ss');
+    var imagesource = req.body.source;
+    var title = req.body.title;
+    var description = req.body.description;
+    var location = req.body.location;
 
-     //Mongoose Save Funtktion to save data
-    ImageSchema.findOneAndRemove({id : delid}, function(error) {
+    var newImageSchema = new ImageSchema({
+      timestamp: timestamp,
+      source: imagesource,
+      title: title,
+      description: description,
+      location: location
+    });
+
+    //Mongoose Save Function to save data
+    newImageSchema.save(function(error, product, numAffected) {
       if (error) {
         console.error(error);
       }
-      for(var i in clients){
-          // Send a message to the client with the message
-          clients[i].sendUTF("datasend");
+      if (numAffected == 1) {
+        mv(path.join(__dirname, '../public/assets/temp/', imagesource), path.join(__dirname, '../public/assets/images/', imagesource), function(err) {
+        });
       }
     });
+
+    res.send(req.body);
+  });
+
+  //UPLOAD IMAGE
+  app.post('/api/uploadfile', function(req, res){
+    var form = new formidable.IncomingForm();
+    form.uploadDir = "public/assets/temp/";
+ 
+    form.parse(req, function(err, fields, files) {     
+      //returns image name to client
+      var filename = path.basename(files.file.path);
+      res.json(filename);
+    });
+  });
+
+  /** 
+
+      UNUSED METHODS
+
+  **/
+
+  //UPDATE IMAGE (PUT)
+  app.put('/api/image/:imageid', function(req, res){
+
+    
+    var imageid = req.param.imageid;
+
+    ImageSchema.update({'imageid': imageid}, {
+        favoritebool: req.body.afavorite
+    }, function(err, numberAffected, rawResponse) {
+
+    })
+
+    res.send(req.body);
+
+  });
+
+  //DELETE IMAGE
+  app.delete('/api/image/:imageid', function(req, res){
+
+    var delid = req.param.imageid;
+
+     //Mongoose Save Funtktion to save data
+    ImageSchema.findOneAndRemove({imageid : delid}, function(error) {
+      if (error) {
+        console.error(error);
+      }
+    });
+
+    res.send(req.body);
     
   });
 
