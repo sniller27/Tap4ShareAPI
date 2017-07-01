@@ -41,11 +41,6 @@ var server = http.createServer(app);
 server.listen(PORT, function(){
   console.log("Server listening on: http://localhost:%s", PORT);
 });
-
-//ENTRY-POINT (INDEX-PAGE)
-app.get('/', function(req, res){
-	res.sendFile(__dirname + '/index.html');
-});
  
 //pass app to routes module
 routes(app);
